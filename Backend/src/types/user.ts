@@ -4,5 +4,5 @@ export interface IUser {
   cargo: string;
   rol: string;
   userName: string;
-  password: number;
+  password: string;
 }

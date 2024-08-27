@@ -2,6 +2,7 @@ import express from "express";
 import { User } from "../database";
 import { IUser } from "../types/user";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -17,7 +18,14 @@ router.post("/login", async (req, res) => {
   }
   const isValid = await bcrypt.compare(password, user.password);
   if (isValid) {
-    res.send({ userName: user.userName, rol: user.rol });
+    const token = jwt.sign(
+      { uName, id: user.id },
+      process.env.SECRET_JWT_KEY!,
+      { expiresIn: "1h" }
+    );
+    res
+      .cookie("access_token", token, { maxAge: 1000 * 60 * 60 })
+      .send({ userName: user.userName, rol: user.rol });
     return;
   } else {
     res.status(401).send("Password invalido");
@@ -25,7 +33,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", (_req, res) => {
-  res.send({});
+  res.clearCookie("access_token").send("Sesion cerrada");
 });
 
 router.post("/register", async (req, res) => {
@@ -55,7 +63,12 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/protected", (_req, res) => {
-  res.send({});
+  const { user } = res.locals;
+  if (!user) {
+    res.status(403).send("No autorizado");
+    return;
+  }
+  res.send(user);
 });
 
 export default router;

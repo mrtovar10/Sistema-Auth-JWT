@@ -3,6 +3,7 @@ import evaluationsRouter from "./routes/evaluations";
 import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
+import { IUserPublic } from "./types/user";
 require("./database");
 
 const app = express();
@@ -12,15 +13,16 @@ app.use(express.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
   const token = req.cookies.access_token;
-  res.locals = { user: null };
+  const user: null | IUserPublic = null;
+  res.locals = { user };
   try {
-    const data = jwt.verify(token, process.env.SECRET_JWT_KEY!);
+    const data = jwt.verify(token, process.env.SECRET_JWT_KEY!) as IUserPublic;
     res.locals.user = data;
   } catch {}
   next();
 });
 
-const PORT = process.env.PORT ?? 3000;
+const PORT = process.env.PORT ?? 8080;
 
 app.get("/ping", (_req, res) => {
   console.log("someone pinged here!");

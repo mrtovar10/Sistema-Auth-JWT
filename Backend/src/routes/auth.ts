@@ -1,6 +1,6 @@
 import express from "express";
 import { User } from "../database";
-import { IUser } from "../types/user";
+import { IUser, Rol } from "../types/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -18,14 +18,11 @@ router.post("/login", async (req, res) => {
   }
   const isValid = await bcrypt.compare(password, user.password);
   if (isValid) {
-    const token = jwt.sign(
-      { uName, id: user.id },
-      process.env.SECRET_JWT_KEY!,
-      { expiresIn: "1h" }
-    );
-    res
-      .cookie("access_token", token, { maxAge: 1000 * 60 * 60 })
-      .send({ userName: user.userName, rol: user.rol });
+    const { password, ...data } = user.toObject();
+    const token = jwt.sign(data, process.env.SECRET_JWT_KEY!, {
+      expiresIn: "1h",
+    });
+    res.cookie("access_token", token, { maxAge: 1000 * 60 * 60 }).send(data);
     return;
   } else {
     res.status(401).send("Password invalido");
@@ -37,7 +34,8 @@ router.post("/logout", (_req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { userName, nombre, dni, cargo, rol, password }: IUser = req.body;
+  const { userName, nombre, dni, cargo, password }: IUser = req.body;
+  const rol = Rol.Employee; // default
   const uName = userName?.toLowerCase();
   const salt = Number(process.env.SALT_ROUNDS);
   try {
@@ -53,7 +51,8 @@ router.post("/register", async (req, res) => {
         password: hashedPassword,
       });
       await user.save();
-      res.send({ userName: user.userName, rol: user.rol });
+      const { password: _, ...data } = user.toObject();
+      res.send(data);
       return;
     }
     res.status(400).send("El nombre de usuario ya está en uso");
@@ -69,6 +68,16 @@ router.post("/protected", (_req, res) => {
     return;
   }
   res.send(user);
+});
+
+router.get("/employees", async (_req, res) => {
+  const { user } = res.locals;
+  if (!user || user?.rol == Rol.Employee) {
+    res.status(403).send("No autorizado");
+    return;
+  }
+  const allUsers = await User.find({}).exec();
+  res.send(allUsers);
 });
 
 export default router;

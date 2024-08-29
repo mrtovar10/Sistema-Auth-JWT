@@ -1,7 +1,7 @@
 import express from "express";
 import { Ievaluation } from "../types/Ievaluation";
 import { Rol } from "../types/Iuser";
-import { Evaluation } from "../database";
+import { Evaluation, User } from "../database";
 
 const router = express.Router();
 
@@ -94,6 +94,36 @@ router.put("/:id", async (req, res) => {
       metrics.teamWork.score ?? evaluation?.metrics.teamWork.score;
     await evaluation.save();
 
+    res.send(evaluation);
+  } catch (error) {
+    res.status(400).send(`Id ${id} no existe`);
+  }
+});
+
+router.get("/employee/:id", async (req, res) => {
+  const { user } = res.locals;
+  if (!user || !(user.rol == Rol.Admin || user.rol == Rol.Manager)) {
+    res.status(403).send("No autorizado");
+    return;
+  }
+  const { id } = req.params;
+  try {
+    const userGet = await User.findById(id).exec();
+
+    if (!userGet) {
+      res.status(400).send(`Usuario con Id ${id} no existe`);
+      return;
+    }
+    const evaluation = await Evaluation.find({
+      userName: userGet?.userName,
+    }).exec();
+
+    if (!evaluation?.length) {
+      res
+        .status(400)
+        .send(`El usuario ${userGet.userName} no posee evaluaciones`);
+      return;
+    }
     res.send(evaluation);
   } catch (error) {
     res.status(400).send(`Id ${id} no existe`);

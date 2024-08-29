@@ -1,6 +1,6 @@
 import express from "express";
 import { User } from "../database";
-import { IUser, Rol } from "../types/user";
+import { IUser, Rol } from "../types/Iuser";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -72,7 +72,7 @@ router.post("/protected", (_req, res) => {
 
 router.get("/employees", async (_req, res) => {
   const { user } = res.locals;
-  if (!user || user?.rol == Rol.Employee) {
+  if (!user || !(user.rol == Rol.Admin || user.rol == Rol.Manager)) {
     res.status(403).send("No autorizado");
     return;
   }

@@ -3,7 +3,7 @@ import evaluationsRouter from "./routes/evaluations";
 import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
-import { IUserPublic } from "./types/user";
+import { IUserPublic } from "./types/Iuser";
 require("./database");
 
 const app = express();

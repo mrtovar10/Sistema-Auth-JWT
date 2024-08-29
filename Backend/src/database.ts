@@ -1,18 +1,13 @@
-import { Schema, model, connect } from "mongoose";
-import { IUser } from "./types/user";
+import { model, connect } from "mongoose";
+import { IUser } from "./types/Iuser";
+import { userSchema } from "./schemas/userSchema";
+import { Ievaluation } from "./types/Ievaluation";
+import { evaluationSchema } from "./schemas/evaluationSchema";
 const dotenv = require("dotenv");
 dotenv.config();
 
-const userSchema = new Schema<IUser>({
-  nombre: { type: String, required: true },
-  dni: { type: Number, required: true },
-  cargo: { type: String, required: true },
-  rol: { type: String, required: true },
-  userName: { type: String, required: true },
-  password: { type: String, required: true, select: false },
-});
-
 export const User = model<IUser>("user", userSchema);
+export const Evaluation = model<Ievaluation>("evaluation", evaluationSchema);
 
 run().catch((err) => console.log(err));
 

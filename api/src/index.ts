@@ -4,6 +4,7 @@ import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import { IUserPublic } from "./types/Iuser";
+const cors = require("cors");
 require("./database");
 
 const app = express();
@@ -21,12 +22,16 @@ app.use((req, res, next) => {
   } catch {}
   next();
 });
+app.use(
+  cors({
+    origin: process.env.ORIGIN_PORT || "http://localhost:5173", // Permite solicitudes solo desde este origen
+  })
+);
 
 const PORT = process.env.PORT ?? 8080;
 
-app.get("/ping", (_req, res) => {
-  console.log("someone pinged here!");
-  res.send("pong");
+app.get("/cookie", (_req, res) => {
+  res.send({ data: res.locals.user });
 });
 
 app.use("/api/evaluations", evaluationsRouter);

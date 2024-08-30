@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
     .select("+password")
     .exec();
   if (!user) {
-    res.status(400).send("Usuario no existe");
+    res.status(400).send({ res: "Usuario no existe" });
     return;
   }
   const isValid = await bcrypt.compare(password, user.password);
@@ -22,10 +22,17 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(data, process.env.SECRET_JWT_KEY!, {
       expiresIn: "1h",
     });
-    res.cookie("access_token", token, { maxAge: 1000 * 60 * 60 }).send(data);
+    res
+      .cookie("access_token", token, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      })
+      .send(data);
     return;
   } else {
-    res.status(401).send("Password invalido");
+    res.status(401).send({ res: "Password invalido" });
   }
 });
 
@@ -55,7 +62,7 @@ router.post("/register", async (req, res) => {
       res.send(data);
       return;
     }
-    res.status(400).send("El nombre de usuario ya está en uso");
+    res.status(400).send({ res: "El nombre de usuario ya está en uso" });
   } catch (error) {
     res.status(400).send(error);
   }
@@ -64,7 +71,7 @@ router.post("/register", async (req, res) => {
 router.post("/protected", (_req, res) => {
   const { user } = res.locals;
   if (!user) {
-    res.status(403).send("No autorizado");
+    res.status(403).send({ res: "No autorizado" });
     return;
   }
   res.send(user);
@@ -73,7 +80,7 @@ router.post("/protected", (_req, res) => {
 router.get("/employees", async (_req, res) => {
   const { user } = res.locals;
   if (!user || !(user.rol == Rol.Admin || user.rol == Rol.Manager)) {
-    res.status(403).send("No autorizado");
+    res.status(403).send({ res: "No autorizado" });
     return;
   }
   const allUsers = await User.find({}).exec();

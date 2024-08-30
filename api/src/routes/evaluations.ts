@@ -16,7 +16,7 @@ router.post("/", (_req, res) => {
 router.post("/create", async (req, res) => {
   const { user } = res.locals;
   if (!user || !(user.rol == Rol.Admin || user.rol == Rol.Manager)) {
-    res.status(403).send("No autorizado");
+    res.status(403).send({ res: "No autorizado" });
     return;
   }
 
@@ -37,26 +37,26 @@ router.post("/create", async (req, res) => {
     await evaluation.save();
     res.send(evaluation);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ res: error });
   }
 });
 
 router.get("/:id", async (req, res) => {
   const { user } = res.locals;
   if (!user || !(user.rol == Rol.Admin || user.rol == Rol.Manager)) {
-    res.status(403).send("No autorizado");
+    res.status(403).send({ res: "No autorizado" });
     return;
   }
   const { id } = req.params;
   try {
     const evaluation = await Evaluation.findById(id).lean().exec();
     if (!evaluation) {
-      res.status(400).send(`Id ${id} no existe`);
+      res.status(400).send({ res: `Id ${id} no existe` });
       return;
     }
     res.send(evaluation);
   } catch (error) {
-    res.status(400).send(`Id ${id} no existe`);
+    res.status(400).send({ res: `Id ${id} no existe` });
   }
 });
 
@@ -64,7 +64,7 @@ router.put("/:id", async (req, res) => {
   const { user } = res.locals;
   const { feedback, generalScore, metrics, title }: Ievaluation = req.body;
   if (!user || !(user.rol == Rol.Admin || user.rol == Rol.Manager)) {
-    res.status(403).send("No autorizado");
+    res.status(403).send({ res: "No autorizado" });
     return;
   }
   const { id } = req.params;
@@ -72,7 +72,7 @@ router.put("/:id", async (req, res) => {
   try {
     const evaluation = await Evaluation.findById(id).exec();
     if (!evaluation) {
-      res.status(400).send(`Id ${id} no existe`);
+      res.status(400).send({ res: `Id ${id} no existe` });
       return;
     }
 
@@ -96,14 +96,14 @@ router.put("/:id", async (req, res) => {
 
     res.send(evaluation);
   } catch (error) {
-    res.status(400).send(`Id ${id} no existe`);
+    res.status(400).send({ res: `Id ${id} no existe` });
   }
 });
 
 router.get("/employee/:id", async (req, res) => {
   const { user } = res.locals;
   if (!user || !(user.rol == Rol.Admin || user.rol == Rol.Manager)) {
-    res.status(403).send("No autorizado");
+    res.status(403).send({ res: "No autorizado" });
     return;
   }
   const { id } = req.params;
@@ -111,7 +111,7 @@ router.get("/employee/:id", async (req, res) => {
     const userGet = await User.findById(id).exec();
 
     if (!userGet) {
-      res.status(400).send(`Usuario con Id ${id} no existe`);
+      res.status(400).send({ res: `Usuario con Id ${id} no existe` });
       return;
     }
     const evaluation = await Evaluation.find({
@@ -121,12 +121,12 @@ router.get("/employee/:id", async (req, res) => {
     if (!evaluation?.length) {
       res
         .status(400)
-        .send(`El usuario ${userGet.userName} no posee evaluaciones`);
+        .send({ res: `El usuario ${userGet.userName} no posee evaluaciones` });
       return;
     }
     res.send(evaluation);
   } catch (error) {
-    res.status(400).send(`Id ${id} no existe`);
+    res.status(400).send({ res: `Id ${id} no existe` });
   }
 });
 

@@ -8,13 +8,13 @@ export const UserProvider = ({ children }: any) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${baseURL}/cookie`)
+    fetch(`${baseURL}/cookie`, { credentials: "include" })
       .then((res) => res.json())
       .then((res) => {
         setUser(res.data);
+        setLoading(false);
       })
       .catch((error) => console.log(error));
-    setLoading(false);
   }, []);
 
   const login = (userData: User) => {
@@ -22,11 +22,14 @@ export const UserProvider = ({ children }: any) => {
   };
 
   const logout = () => {
+    fetch(`${baseURL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    }).catch((error) => console.log(error));
     setUser(null);
   };
   return (
     <userContext.Provider value={{ user, login, logout, loading }}>
-      <h1>{JSON.stringify(user, null, 2)}</h1>
       {children}
     </userContext.Provider>
   );

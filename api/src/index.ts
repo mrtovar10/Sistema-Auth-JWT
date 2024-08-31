@@ -4,10 +4,13 @@ import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import { IUserPublic } from "./types/Iuser";
-const cors = require("cors");
-require("./database");
+import cors, { CorsOptions } from "cors";
 
 const app = express();
+const corsOptions: CorsOptions = {
+  origin: process.env.ORIGIN_PORT || "http://localhost:5173", // Permite solicitudes solo desde este origen
+  credentials: true, // Habilita el uso de cookies
+};
 
 //Middlewares
 app.use(express.json());
@@ -22,11 +25,7 @@ app.use((req, res, next) => {
   } catch {}
   next();
 });
-app.use(
-  cors({
-    origin: process.env.ORIGIN_PORT || "http://localhost:5173", // Permite solicitudes solo desde este origen
-  })
-);
+app.use(cors(corsOptions));
 
 const PORT = process.env.PORT ?? 8080;
 

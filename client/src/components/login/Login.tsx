@@ -1,13 +1,13 @@
-"use client";
 import { Field, Form, Formik, FormikValues } from "formik";
 import { baseURL } from "../../constants/constants";
 import { IRes, User } from "../../../types/interfaces";
 import { useContext } from "react";
 import { userContext } from "../../../context/UserContext";
 import { Navigate } from "react-router-dom";
+import { Loading } from "../Loading";
 
 export const Login = () => {
-  const { user, login } = useContext(userContext)!;
+  const { user, login, loading } = useContext(userContext)!;
   const validateUser = (values: FormikValues) => {
     const send = {
       userName: values.userName,
@@ -18,6 +18,7 @@ export const Login = () => {
       headers: {
         "Content-Type": "application/json", // tipo de contenido
       },
+      credentials: "include",
       body: JSON.stringify(send),
     })
       .then((res) => res.json())
@@ -27,6 +28,7 @@ export const Login = () => {
       })
       .catch((error) => console.log(error));
   };
+  if (loading) return <Loading />;
   if (user?.rol) return <Navigate to={`/dashboard/${user.rol}`} />;
 
   return (

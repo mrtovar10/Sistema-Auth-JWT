@@ -1,13 +1,12 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { Login } from "./components/login/Login";
+import { AdminDashboard } from "./components/adminDashboard/AdminDashboard";
 
 const EmployeeDashboard = () => {
   return <h1 className="text-3xl font-bold underline">Employee Dashboard</h1>;
 };
-const AdminDashboard = () => {
-  return <h1 className="text-3xl font-bold underline">Admin Dashboard</h1>;
-};
+
 const ManagerDashboard = () => {
   return <h1 className="text-3xl font-bold underline">Manager Dashboard</h1>;
 };

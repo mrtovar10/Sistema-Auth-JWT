@@ -4,14 +4,14 @@ import { userContext } from "../../../context/UserContext";
 import { Navigate } from "react-router-dom";
 import { Loading } from "../Loading";
 
-export const AdminDashboard = (): JSX.Element => {
+export const EmployeeDashboard = (): JSX.Element => {
   const { user, loading } = useContext(userContext)!;
   if (loading) return <Loading />;
   if (!user?.rol) return <Navigate to={`/`} />;
   return (
     <>
       <Header />
-      <h1>Admin Dashboard</h1>
+      <h1>Employee Dashboard</h1>
       <div className="flex">
         <h2>Nombre de usuario:</h2>
         <p>{user.userName}</p>

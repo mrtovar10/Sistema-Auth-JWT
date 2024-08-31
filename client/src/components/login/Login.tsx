@@ -3,10 +3,10 @@ import { baseURL } from "../../constants/constants";
 import { IRes, User } from "../../../types/interfaces";
 import { useContext } from "react";
 import { userContext } from "../../../context/UserContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { Loading } from "../Loading";
 
-export const Login = () => {
+export const Login = (): JSX.Element => {
   const { user, login, loading } = useContext(userContext)!;
   const validateUser = (values: FormikValues) => {
     const send = {
@@ -63,12 +63,12 @@ export const Login = () => {
                   <div className="mb-6">
                     <div className="flex justify-between mb-2">
                       <label className="text-sm text-gray-600">Password</label>
-                      <a
-                        href="#!"
+                      <Link
+                        to={"/register"}
                         className="text-sm text-gray-400 focus:outline-none focus:text-indigo-500 hover:text-indigo-500"
                       >
                         Register
-                      </a>
+                      </Link>
                     </div>
                     <Field
                       type="password"

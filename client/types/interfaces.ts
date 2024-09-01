@@ -12,6 +12,7 @@ export interface User {
   cargo: string;
   rol: Rol;
   userName: string;
+  _id: string;
 }
 
 export enum Rol {

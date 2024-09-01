@@ -84,7 +84,7 @@ router.get("/employees", async (_req, res) => {
     return;
   }
   const allUsers = await User.find({}).exec();
-  res.send(allUsers);
+  res.send({ arr: allUsers });
 });
 
 export default router;

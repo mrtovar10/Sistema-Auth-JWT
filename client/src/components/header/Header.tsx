@@ -14,11 +14,6 @@ export const Header = () => {
             </span>
           </a>
           <div className="md:items-center md:w-auto flex">
-            <div className="md:flex hidden">
-              <a className="block md:text-white mr-4" href="#">
-                Link 1
-              </a>
-            </div>
             <div className="flex text-sm font-semibold">
               <Button text="Logout" onClick={logout} />
             </div>

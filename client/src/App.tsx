@@ -18,7 +18,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/evaluation" element={<Evaluation />} />
         <Route path="/dashboard/employee" element={<EmployeeDashboard />} />
-        <Route path="/dashboard/manager" element={<ManagerDashboard />} />
+        {/* Temporalmente se muestra el componente AdminDashboard en la ruta manager */}
+        <Route path="/dashboard/manager" element={<AdminDashboard />} />
         <Route path="/dashboard/admin" element={<AdminDashboard />} />
       </Routes>
     </>

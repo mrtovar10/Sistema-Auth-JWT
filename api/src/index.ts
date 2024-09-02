@@ -29,6 +29,10 @@ app.use(cors(corsOptions));
 
 const PORT = process.env.PORT ?? 8080;
 
+app.get("/", (_req, res) => {
+  res.send({ res: "Aplicación corriendo :)" });
+});
+
 app.get("/cookie", (_req, res) => {
   res.send({ data: res.locals.user });
 });

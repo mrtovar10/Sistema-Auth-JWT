@@ -29,7 +29,8 @@ export const Login = (): JSX.Element => {
       .catch((error) => console.log(error));
   };
   if (loading) return <Loading />;
-  if (user?.rol) return <Navigate to={`/dashboard/${user.rol}`} />;
+  if (user?.rol)
+    return <Navigate to={`/dashboard/${user.rol.toLowerCase()}`} />;
 
   return (
     <>

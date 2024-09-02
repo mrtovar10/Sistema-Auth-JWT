@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { IUserPublic } from "./types/Iuser";
 import cors, { CorsOptions } from "cors";
 
-const app = express();
+export const app = express();
 const corsOptions: CorsOptions = {
   origin: process.env.ORIGIN_PORT || "http://localhost:5173", // Permite solicitudes solo desde este origen
   credentials: true, // Habilita el uso de cookies

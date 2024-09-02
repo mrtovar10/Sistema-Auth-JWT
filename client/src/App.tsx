@@ -4,7 +4,7 @@ import { Login } from "./components/login/Login";
 import { AdminDashboard } from "./components/adminDashboard/AdminDashboard";
 import { Register } from "./components/register/Register";
 import { EmployeeDashboard } from "./components/employeeDashboard/EmployeeDashboard";
-import { ManagerDashboard } from "./components/managerDashboard/ManagerDashboard";
+// import { ManagerDashboard } from "./components/managerDashboard/ManagerDashboard";
 
 const Evaluation = () => {
   return <h1>Evaluation</h1>;
